@@ -102,26 +102,44 @@ export function WithdrawTab({
 
       // Build sparse Merkle proof
       console.log("Building Merkle proof...");
-      const { pathElements, pathIndices } = buildSparseTreeProof(
+      const { root: computedRoot, pathElements, pathIndices } = await buildSparseTreeProof(
         BigInt(note.commitment),
         parseInt(note.leafIndex),
         merkleTreeLevels
       );
 
       console.log("Merkle proof built");
+      console.log("Computed root:", computedRoot.toString());
+      console.log("Contract root:", contractRoot);
+      console.log("Path elements:", pathElements.map(x => x.toString()));
+      console.log("Path indices:", pathIndices);
+
+      // CRITICAL: Verify computed root matches contract root
+      if (computedRoot.toString() !== contractRoot) {
+        throw new Error(
+          `Merkle root mismatch! This likely means the commitment or leaf index is incorrect.\n` +
+          `Computed root: ${computedRoot.toString()}\n` +
+          `Contract root: ${contractRoot}\n` +
+          `This could happen if:\n` +
+          `- The contract has new deposits since your deposit\n` +
+          `- The leaf index in your note is wrong\n` +
+          `- The commitment value is incorrect`
+        );
+      }
+      console.log("✅ Merkle roots match!");
 
       // Convert recipient address to BigInt
       setStatus("generating_proof");
       console.log("Converting addresses...");
 
-      // For bech32 addresses, we need to hash them
-      // For now, we'll use a simplified approach
+      // Convert addresses to BigInt format (matching contract test implementation)
       const recipientBigInt = await addressToBigInt(recipient);
-      const relayerBigInt = "0"; // No relayer
+      // Relayer address must also be converted - use hex zero address
+      const relayerBigInt = await addressToBigInt("0x0000000000000000000000000000000000000000");
 
-      // Prepare withdrawal input
+      // Prepare withdrawal input (use computed root which matches contract root)
       const withdrawInput = {
-        root: contractRoot,
+        root: computedRoot.toString(),
         nullifierHash: note.nullifierHash,
         recipient: recipientBigInt,
         relayer: relayerBigInt,
@@ -147,7 +165,7 @@ export function WithdrawTab({
       const result = await onWithdraw(
         proofResult.proof,
         proofResult.publicSignals,
-        contractRoot,
+        computedRoot.toString(),
         note.nullifierHash,
         recipient,
         "0x0000000000000000000000000000000000000000", // No relayer

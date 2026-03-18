@@ -200,6 +200,7 @@ async function main() {
   console.log(`   ✅ Contract instantiated at: ${contractAddress}`);
   console.log(`   Transaction hash: ${instantiateResult.transactionHash}`);
   console.log(`   Denomination: ${denomination} uxion`);
+  process.exit(0); // Exit after instantiation for testing purposes
   // console.log(`   ✅ Contract already instantiated at: xion1w5mkgd0npxuynm07mx75hwxcg4ghf9an8w3lrhzvuajqjleqlrnsm7s47d`);
 
   // const contractAddress = "xion1w5mkgd0npxuynm07mx75hwxcg4ghf9an8w3lrhzvuajqjleqlrnsm7s47d"

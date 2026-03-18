@@ -3,29 +3,89 @@
  * Builds sparse Merkle trees and generates proofs for zero-knowledge circuits
  */
 
+import { buildPoseidon } from "circomlibjs";
 import type { MerkleTree, MerkleProof } from "../types/tornado";
+
+// Cache the Poseidon instance
+let poseidonInstance: any = null;
+let poseidonField: any = null;
+
+/**
+ * Initialize Poseidon hash function
+ */
+async function getPoseidon() {
+  if (!poseidonInstance) {
+    poseidonInstance = await buildPoseidon();
+    poseidonField = poseidonInstance.F;
+  }
+  return { poseidon: poseidonInstance, F: poseidonField };
+}
+
+/**
+ * Hash two values using Poseidon (matching circuit implementation)
+ */
+function hashPoseidonPair(poseidon: any, F: any, left: bigint, right: bigint): bigint {
+  // Use Poseidon hash with 2 inputs (matching circuit's HashLeftRight template)
+  const hash = poseidon([left, right]);
+  return F.toObject(hash);
+}
 
 /**
  * Build a sparse Merkle tree from leaves
  * Empty leaves are filled with zeros
  *
- * Note: Poseidon hashing is done by the proof server, so we build the tree structure
- * but send leaves to the server for actual hash computation.
- *
- * This is a placeholder - the actual tree building with Poseidon hashes
- * will be done by calling the proof server or using circomlibjs if we add it.
- *
  * @param leaves - Array of leaf values (commitments as BigInt)
  * @param levels - Merkle tree depth
  * @returns Merkle tree with root and proofs
  */
-export function buildMerkleTree(
+export async function buildMerkleTree(
   leaves: bigint[],
   levels: number
-): MerkleTree {
-  // This is a simplified version - in practice, we need to use Poseidon hash
-  // The actual implementation will call the proof server or use circomlibjs
-  throw new Error('buildMerkleTree requires Poseidon hash implementation. Use proof server instead.');
+): Promise<MerkleTree> {
+  const { poseidon, F } = await getPoseidon();
+  const tree: bigint[][] = [leaves];
+
+  // Build tree level by level using Poseidon (matching circuit implementation)
+  for (let level = 0; level < levels; level++) {
+    const currentLevel = tree[level];
+    const nextLevel: bigint[] = [];
+
+    for (let i = 0; i < currentLevel.length; i += 2) {
+      const left = currentLevel[i] || BigInt(0);
+      const right = currentLevel[i + 1] || BigInt(0);
+      const hash = hashPoseidonPair(poseidon, F, left, right);
+      nextLevel.push(hash);
+    }
+
+    tree.push(nextLevel);
+  }
+
+  const root = tree[levels][0];
+
+  // Generate proofs for each leaf
+  const pathElements: bigint[][] = [];
+  const pathIndices: number[][] = [];
+
+  for (let leafIdx = 0; leafIdx < leaves.length; leafIdx++) {
+    const path: bigint[] = [];
+    const indices: number[] = [];
+    let index = leafIdx;
+
+    for (let level = 0; level < levels; level++) {
+      const isRight = index % 2;
+      const siblingIndex = isRight ? index - 1 : index + 1;
+      const sibling = tree[level][siblingIndex] || BigInt(0);
+
+      path.push(sibling);
+      indices.push(isRight);
+      index = Math.floor(index / 2);
+    }
+
+    pathElements.push(path);
+    pathIndices.push(indices);
+  }
+
+  return { root, pathElements, pathIndices };
 }
 
 /**
@@ -65,43 +125,38 @@ export function verifyMerkleProof(
 
 /**
  * Build sparse Merkle tree for withdrawal
- * In practice, this is simplified - we just need to know the structure
- * The actual tree building with Poseidon hashing is done server-side or via circomlibjs
- *
- * For now, we'll use a simplified approach where we query the contract for the root
- * and build a zero-filled tree except for our commitment.
+ * Builds a full Merkle tree with the commitment at the specified leaf index
+ * and all other leaves as zero, then extracts the proof path.
  *
  * @param commitment - Our commitment value
  * @param leafIndex - Index where our commitment is located
  * @param levels - Tree depth
- * @returns Path elements and indices for the proof
+ * @returns Root, path elements and indices for the proof
  */
-export function buildSparseTreeProof(
+export async function buildSparseTreeProof(
   commitment: bigint,
   leafIndex: number,
   levels: number
-): {
+): Promise<{
+  root: bigint;
   pathElements: bigint[];
   pathIndices: number[];
-} {
-  const pathElements: bigint[] = [];
-  const pathIndices: number[] = [];
+}> {
+  const numLeaves = 1 << levels; // 2^levels
 
-  let index = leafIndex;
+  // Build array of leaves with commitment at the correct index
+  const leaves = new Array(numLeaves).fill(BigInt(0));
+  leaves[leafIndex] = commitment;
 
-  // Build proof path by traversing up the tree
-  for (let level = 0; level < levels; level++) {
-    const isRight = index % 2;
-    const siblingIndex = isRight ? index - 1 : index + 1;
+  // Build full Merkle tree
+  const tree = await buildMerkleTree(leaves, levels);
 
-    // Sibling is always zero in sparse tree (except for our leaf)
-    pathElements.push(BigInt(0));
-    pathIndices.push(isRight);
-
-    index = Math.floor(index / 2);
-  }
-
-  return { pathElements, pathIndices };
+  // Extract proof for our commitment
+  return {
+    root: tree.root,
+    pathElements: tree.pathElements[leafIndex],
+    pathIndices: tree.pathIndices[leafIndex],
+  };
 }
 
 /**

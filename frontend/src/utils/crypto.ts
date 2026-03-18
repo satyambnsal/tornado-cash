@@ -24,9 +24,9 @@ export function generateRandomFieldElement(): bigint {
  * Must match the contract's address_to_uint256 function
  *
  * @param address - Address in hex (0x...) or bech32 format (xion...)
- * @returns Address as BigInt string representation
+ * @returns Promise<string> - Address as BigInt string representation
  */
-export function addressToBigInt(address: string): string {
+export async function addressToBigInt(address: string): Promise<string> {
   if (address.startsWith('0x')) {
     // Hex address - decode it directly
     const hex = address.slice(2);

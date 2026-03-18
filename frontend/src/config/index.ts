@@ -269,7 +269,7 @@ export const OAUTH_CALLBACK_URL =
 export const TORNADO_PROOF_SERVER_URL =
   import.meta.env.VITE_PROOF_SERVER_URL || "http://3.213.0.115:3016";
 
-export const TORNADO_CONTRACT_ADDRESS = "xion1d7d8jdyak0x46up750zz9qfqelvay90thzw7s8qnhe3zruh3232qnexm9j"
+export const TORNADO_CONTRACT_ADDRESS = "xion14qt7g28sjfagprlptr4d6hgjqv7g2cn5kq38w0kw3d2pca79crvs3sm4yh"
 
 export const TORNADO_DENOMINATION =
   import.meta.env.VITE_DENOMINATION || "100000"; // 0.1 XION
