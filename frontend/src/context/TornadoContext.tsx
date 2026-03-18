@@ -3,10 +3,19 @@
  * Provides Tornado-specific state and contract interactions
  */
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import type { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import type { ContractConfig } from "../types/tornado";
-import { TornadoContractService, createTornadoContract } from "../services/tornadoContract";
+import {
+  TornadoContractService,
+  createTornadoContract,
+} from "../services/tornadoContract";
 import { ContractError } from "../types/tornado";
 import {
   TORNADO_CONTRACT_ADDRESS,
@@ -42,7 +51,7 @@ export function TornadoProvider({ children }: TornadoProviderProps) {
   const [denomination] = useState(TORNADO_DENOMINATION);
   const [merkleTreeLevels] = useState(TORNADO_MERKLE_TREE_LEVELS);
   const [contractConfig, setContractConfig] = useState<ContractConfig | null>(
-    null
+    null,
   );
   const [isLoadingConfig, setIsLoadingConfig] = useState(false);
   const [contractService, setContractService] =
