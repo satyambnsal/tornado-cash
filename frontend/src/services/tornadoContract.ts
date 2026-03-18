@@ -106,11 +106,34 @@ export class TornadoContractService {
     amount: readonly Coin[]
   ): Promise<{ txHash: string; events: readonly any[] }> {
     try {
+      // Validate inputs
+      if (!this.client) {
+        throw new Error("Client is not initialized");
+      }
+      if (!this.client.execute) {
+        throw new Error("Client does not have execute method");
+      }
+      if (!senderAddress) {
+        throw new Error("Sender address is required");
+      }
+      if (!commitment) {
+        throw new Error("Commitment is required");
+      }
+
       const depositMsg: DepositMsg = {
         deposit: {
           commitment: toUint256String(BigInt(commitment)),
         },
       };
+
+      console.log("Deposit details:", {
+        senderAddress,
+        contractAddress: this.contractAddress,
+        commitment: toUint256String(BigInt(commitment)),
+        amount,
+        depositMsg,
+        clientType: this.client.constructor.name,
+      });
 
       const result = await this.client.execute(
         senderAddress,
@@ -126,7 +149,10 @@ export class TornadoContractService {
         events: result.events,
       };
     } catch (error) {
-      throw new ContractError("Failed to execute deposit", error);
+      console.error("Deposit execution error:", error);
+      // Extract meaningful error message
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new ContractError(`Failed to execute deposit: ${errorMessage}`, error);
     }
   }
 

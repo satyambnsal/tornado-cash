@@ -40,6 +40,12 @@ export function DepositTab({
       setStatus("generating");
       setError(null);
 
+      console.log("=== Starting Deposit ===");
+      console.log("Balance:", balance);
+      console.log("Denomination:", denomination);
+      console.log("User Address:", userAddress);
+      console.log("Contract Address:", contractAddress);
+
       // Step 1: Generate random nullifier and secret client-side
       console.log("Generating deposit credentials...");
       const { nullifier, secret } = generateDepositCredentials();
@@ -52,6 +58,8 @@ export function DepositTab({
       );
 
       console.log("Commitment generated:", commitment);
+      console.log("Nullifier:", nullifier.toString());
+      console.log("Secret:", secret.toString());
 
       // Step 3: Execute deposit transaction
       setStatus("depositing");
@@ -107,7 +115,16 @@ export function DepositTab({
       });
     } catch (err) {
       console.error("Deposit failed:", err);
-      setError(err instanceof Error ? err.message : "Failed to deposit");
+      const errorMessage = err instanceof Error ? err.message : String(err);
+
+      // Check if it's an authorization error
+      if (errorMessage.includes("unauthorized") || errorMessage.includes("permission")) {
+        setError(
+          "Contract authorization required. Please disconnect and reconnect your wallet to grant the necessary permissions to the Tornado Cash contract."
+        );
+      } else {
+        setError(errorMessage);
+      }
       setStatus("error");
     }
   };
@@ -178,8 +195,8 @@ export function DepositTab({
           <p className="ui-text-sm ui-mt-1">{error}</p>
           <Button
             onClick={() => setError(null)}
-            variant="outline"
-            size="sm"
+            variant="secondary"
+            size="small"
             className="ui-mt-3"
           >
             Dismiss

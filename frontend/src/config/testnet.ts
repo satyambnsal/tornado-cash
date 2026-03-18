@@ -32,9 +32,6 @@ export const testnetConfig = {
     "https://api.subquery.network/sq/burnt-labs/xion-testnet-2-indexer",
   numiaUrl: "https://xion-testnet-2.numia.xyz/v3/",
 
-  // Fee Granter
-  feeGranterAddress: "xion1xrqz2wpt4rw8rtdvrc4n4yn5h54jm0nn4evn2x",
-
   // Contract Code IDs
   defaultAccountContractCodeId: "1880",
 

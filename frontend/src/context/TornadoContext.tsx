@@ -50,11 +50,16 @@ export function TornadoProvider({ children }: TornadoProviderProps) {
 
   const initializeContract = async (client: SigningCosmWasmClient | any) => {
     try {
+      console.log("Initializing contract with address:", contractAddress);
+      console.log("Client type:", client?.constructor?.name);
+
       const service = createTornadoContract(client, contractAddress);
       setContractService(service);
 
-      // Load contract config
+      // Load contract config to verify contract is accessible
       await refreshConfigWithService(service);
+
+      console.log("Contract initialized successfully");
     } catch (error) {
       console.error("Failed to initialize contract:", error);
       throw new ContractError("Failed to initialize contract", error);

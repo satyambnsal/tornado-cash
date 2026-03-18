@@ -269,6 +269,9 @@ export function SimpleTornadoCashApp() {
           <p className="ui-mt-2 ui-text-xs">
             Always verify contract addresses and use at your own risk
           </p>
+          <p className="ui-mt-2 ui-text-xs ui-font-semibold">
+            ⚠️ Users pay their own gas fees for all transactions
+          </p>
         </div>
       </footer>
     </div>
