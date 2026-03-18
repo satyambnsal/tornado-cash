@@ -4,6 +4,11 @@
 
 A collection of zero-knowledge circuits built with [Circom](https://docs.circom.io/) for XION blockchain applications.
 
+```bash
+ # Start the server with PM2
+  pm2 start ecosystem.config.js
+```
+
 ## Available Circuits
 
 ### Sudoku

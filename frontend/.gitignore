@@ -1,0 +1,54 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment files
+.env*
+!.env.example
+
+# Wrangler generated types (run `wrangler types` to generate locally)
+worker-configuration.d.ts
+
+# Wrangler state
+.wrangler
+.dev.vars*
+coverage*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# Ignore vite build output
+/dist
+
+# ignore local docs
+.docs/
+
+# Temporary files
+tmp/
+
+# Claude AI context files
+!CLAUDE.md

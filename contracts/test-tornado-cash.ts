@@ -18,7 +18,7 @@ const CHAIN_ID = process.env.CHAIN_ID || 'xion-testnet-2';
 const CODE_ID = parseInt(process.env.CODE_ID || '2048');
 const DEPOSIT_ADDRESS = process.env.SATYAM2 || '';
 const WITHDRAW_ADDRESS = process.env.SATYAM_TORN || '';
-const PROOF_SERVER_URL = process.env.PROOF_SERVER_URL || 'http://localhost:3001';
+const PROOF_SERVER_URL = process.env.PROOF_SERVER_URL || 'http://3.213.0.115:3016';
 
 // You need to provide your mnemonics here - NEVER commit this to version control
 // For testing purposes, you can set them in .env.local as MNEMONIC and MNEMONIC2

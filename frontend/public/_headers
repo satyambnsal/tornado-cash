@@ -1,0 +1,4 @@
+# https://developers.cloudflare.com/pages/configuration/headers/
+/*
+    Content-Security-Policy: frame-ancestors *
+    X-Frame-Options: ALLOWALL

@@ -1,0 +1,82 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "xion-dashboard",
+  "compatibility_date": "2025-11-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "keep_vars": true,
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "directory": "./dist",
+  },
+  "preview_urls": true,
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "env": {
+    "mainnet": {
+      "name": "xion-dashboard-mainnet",
+      "routes": [
+        {
+          "pattern": "settings.burnt.com",
+          "custom_domain": true,
+        },
+        {
+          "pattern": "auth.burnt.com",
+          "custom_domain": true,
+        },
+      ],
+      "build": { "command": "npm run build:mainnet" },
+    },
+    "mainnet-apple": {
+      "name": "xion-dashboard-mainnet-apple",
+      "routes": [
+        {
+          "pattern": "b8f4ba346f2b6753settings.burnttesting.xyz",
+          "custom_domain": true,
+        },
+      ],
+      "build": { "command": "npm run build:mainnet" },
+    },
+    "testnet": {
+      "name": "xion-dashboard-testnet",
+      "routes": [
+        {
+          "pattern": "settings.testnet.burnt.com",
+          "custom_domain": true,
+        },
+        {
+          "pattern": "auth.testnet.burnt.com",
+          "custom_domain": true,
+        },
+      ],
+      "build": { "command": "npm run build:testnet" },
+    },
+    "testnet-beta": {
+      "name": "xion-dashboard-testnet-beta",
+      "routes": [
+        {
+          "pattern": "auth-beta.testnet.burnt.com",
+          "custom_domain": true,
+        },
+      ],
+      "build": { "command": "npm run build:testnet-beta" },
+    },
+    "mainnet-beta": {
+      "name": "xion-dashboard-mainnet-beta",
+      "routes": [
+        {
+          "pattern": "auth-beta.burnt.com",
+          "custom_domain": true,
+        },
+        {
+          "pattern": "auth-beta.mainnet.burnt.com",
+          "custom_domain": true,
+        },
+      ],
+      "build": { "command": "npm run build:mainnet-beta" },
+    },
+  },
+}

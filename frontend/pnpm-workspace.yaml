@@ -1,0 +1,7 @@
+onlyBuiltDependencies:
+  - esbuild
+  - keccak
+  - protobufjs
+  - secp256k1
+  - sharp
+  - workerd
