@@ -43,7 +43,7 @@ Content-Type: application/json
 
 ### Remote Proof server
 
-POST http://3.213.0.115:3016/generate-proof/withdraw
+POST https://api.ravenhouse.xyz/prover/generate-proof/withdraw
 Content-Type: application/json
 
 {
