@@ -4,23 +4,31 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --primary-text: #111827;
-    --secondary-text: #6B7280;
-    --border: #E5E7EB;
-    --border-focus: #6B7280;
-    --destructive: 18 95% 43%;
-    --warning: 32 76% 58%;
-    --surface: #FFFFFF;
-    --surface-page: #F3F4F6;
-    --surface-border: #E5E7EB;
-    --card-bg: #FFFFFF;
-    --text-primary: #111827;
-    --text-secondary: #6B7280;
-    --text-muted: #71717A;
-    --cta: #2563EB;
+    /* Pure Black and White Theme for Tornado Cash */
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 0 0% 0%; /* Pure black */
+    --primary-text: #000000; /* Pure black */
+    --secondary-text: #666666; /* Dark gray */
+    --border: #E5E5E5; /* Light gray */
+    --border-focus: #000000; /* Pure black */
+    --destructive: 0 73% 41%; /* Red for errors */
+    --warning: 38 92% 50%; /* Orange for warnings */
+    --success: 142 76% 36%; /* Green for success */
+    --surface: #FFFFFF; /* Pure white */
+    --surface-page: #F5F5F5; /* Very light gray */
+    --surface-border: #E5E5E5; /* Light gray */
+    --card-bg: #FFFFFF; /* Pure white */
+    --text-primary: #000000; /* Pure black */
+    --text-secondary: #666666; /* Dark gray */
+    --text-muted: #999999; /* Medium gray */
+    --cta: #000000; /* Pure black for CTA */
     --xion-icon-bg: black;
     --xion-icon-fg: white;
+    --muted: #F5F5F5; /* Very light gray */
+    --muted-foreground: #666666; /* Dark gray */
+    --error: #DC2626; /* Red */
+    --error-foreground: #FFFFFF; /* White */
+    --success-foreground: #FFFFFF; /* White */
   }
 
   [data-theme="dark"] {

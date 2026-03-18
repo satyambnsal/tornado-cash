@@ -9,10 +9,11 @@ window.global = window;
 import ReactDOM from "react-dom/client";
 import { QueryClient } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
-import { App } from "./components/App";
+import { TornadoCashApp } from "./components/TornadoCashApp";
 import { Callback } from "./components/Callback";
 import { LoginExternalAuth } from "./components/LoginExternalAuth";
 import { RootProviders } from "./components/RootProviders";
+import { TornadoProvider } from "./context/TornadoContext";
 
 import "./index.css";
 
@@ -73,11 +74,13 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <RootProviders queryClient={queryClient}>
-    <Routes>
-      <Route path="/callback" element={<Callback />} />
-      <Route path="/oauth/callback" element={<Callback />} />
-      <Route path="/oauth/external" element={<LoginExternalAuth />} />
-      <Route path="/*" element={<App />} />
-    </Routes>
+    <TornadoProvider>
+      <Routes>
+        <Route path="/callback" element={<Callback />} />
+        <Route path="/oauth/callback" element={<Callback />} />
+        <Route path="/oauth/external" element={<LoginExternalAuth />} />
+        <Route path="/*" element={<TornadoCashApp />} />
+      </Routes>
+    </TornadoProvider>
   </RootProviders>,
 );

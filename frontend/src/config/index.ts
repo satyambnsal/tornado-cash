@@ -263,5 +263,23 @@ export const OAUTH_CALLBACK_URL =
   `${networkConfig.dashboardUrl}/oauth/callback`;
 
 // =============================================================================
+// Tornado Cash Configuration
+// =============================================================================
+
+export const TORNADO_PROOF_SERVER_URL =
+  import.meta.env.VITE_PROOF_SERVER_URL || "http://3.213.0.115:3016";
+
+export const TORNADO_CONTRACT_ADDRESS =
+  import.meta.env.VITE_CONTRACT_ADDRESS || "";
+
+export const TORNADO_DENOMINATION =
+  import.meta.env.VITE_DENOMINATION || "100000"; // 0.1 XION
+
+export const TORNADO_MERKLE_TREE_LEVELS =
+  import.meta.env.VITE_MERKLE_TREE_LEVELS
+    ? parseInt(import.meta.env.VITE_MERKLE_TREE_LEVELS, 10)
+    : 10;
+
+// =============================================================================
 // Treasury Strategy Configuration
 // =============================================================================

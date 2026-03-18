@@ -1,6 +1,6 @@
 import React from "react";
 
-const AnimatedCheckmark = () => {
+export const AnimatedCheckmark = () => {
   return (
     <div
       className="ui-flex ui-items-center ui-justify-center ui-w-24 ui-h-24"

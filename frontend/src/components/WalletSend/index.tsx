@@ -1,1 +1,0 @@
-export { WalletSend } from "./WalletSend";
