@@ -1,0 +1,11 @@
+artifacts
+types
+node_modules
+*.log
+.DS_STORE
+wasm
+zkey
+dist
+.env.local
+cache
+target

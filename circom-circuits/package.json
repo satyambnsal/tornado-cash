@@ -1,0 +1,46 @@
+{
+  "name": "tornaddo-circuits",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "A Circom circuits for Tornado Cash on Xion",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.11.9",
+    "circom_tester": "^0.0.19",
+    "circomlibjs": "^0.1.7",
+    "ffjavascript": "^0.2.57",
+    "jest": "^29.5.0",
+    "snarkjs": "^0.7.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  },
+  "author": {
+    "name": "Satyam Bansal",
+    "email": "satyambnsal@gmail.com"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "compile": "yarn ts-node utils/build_circuits.ts",
+    "compile:sudoku": "circom circuits/sudoku/sudoku.circom --wasm --sym --r1cs -o circuits/sudoku",
+    "test": "jest",
+    "test:sudoku": "jest sudoku",
+    "checksum": "yarn ts-node utils/generate_checksum.ts",
+    "upload": "echo 'todo'",
+    "prep:sudoku": "mkdir -p circuits/sudoku wasm zkey"
+  },
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "dotenv": "^16.0.3",
+    "keccak": "^3.0.4",
+    "log4js": "^6.9.1"
+  },
+  "files": [
+    "tsconfig.json",
+    "README.md",
+    "utils",
+    "tests",
+    "circuits"
+  ]
+}

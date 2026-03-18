@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Sensitive data
+tornado-deposit.json
+.env.local
+.env
+
+# Build output
+dist/
+*.log
+
+# OS files
+.DS_Store
