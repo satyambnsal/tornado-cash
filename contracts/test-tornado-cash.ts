@@ -18,6 +18,7 @@ const CHAIN_ID = process.env.CHAIN_ID || 'xion-testnet-2';
 const CODE_ID = parseInt(process.env.CODE_ID || '2048');
 const DEPOSIT_ADDRESS = process.env.SATYAM2 || '';
 const WITHDRAW_ADDRESS = process.env.SATYAM_TORN || '';
+const PROOF_SERVER_URL = process.env.PROOF_SERVER_URL || 'http://localhost:3001';
 
 // You need to provide your mnemonics here - NEVER commit this to version control
 // For testing purposes, you can set them in .env.local as MNEMONIC and MNEMONIC2
@@ -66,20 +67,20 @@ function hashPoseidonPair(poseidon: any, F: any, left: bigint, right: bigint): b
 }
 
 // Helper function to convert proof to contract format
-function formatProofForContract(proof: any): {
-  a: [string, string];
-  b: [[string, string], [string, string]];
-  c: [string, string];
-} {
-  return {
-    a: [proof.pi_a[0], proof.pi_a[1]],
-    b: [
-      [proof.pi_b[0][0], proof.pi_b[0][1]], // XION expects standard SnarkJS format (no reversal)
-      [proof.pi_b[1][0], proof.pi_b[1][1]],
-    ],
-    c: [proof.pi_c[0], proof.pi_c[1]],
-  };
-}
+// function formatProofForContract(proof: any): {
+//   a: [string, string];
+//   b: [[string, string], [string, string]];
+//   c: [string, string];
+// } {
+//   return {
+//     a: [proof.pi_a[0], proof.pi_a[1]],
+//     b: [
+//       [proof.pi_b[0][0], proof.pi_b[0][1]], // XION expects standard SnarkJS format (no reversal)
+//       [proof.pi_b[1][0], proof.pi_b[1][1]],
+//     ],
+//     c: [proof.pi_c[0], proof.pi_c[1]],
+//   };
+// }
 
 // Helper function to query transaction events by hash
 async function getTransactionEvents(
@@ -397,7 +398,11 @@ async function main() {
     process.exit(1);
   }
 
-  const { proof, publicSignals } = await snarkjs.groth16.fullProve(withdrawInput, WASM_FILE, ZKEY_FILE);
+  // const { proof, publicSignals } = await snarkjs.groth16.fullProve(withdrawInput, WASM_FILE, ZKEY_FILE);
+
+  fs.writeFileSync('withdraw_input.json', JSON.stringify(withdrawInput, null, 2));
+
+  const { proof, publicSignals } = await generateWithdrawProof(withdrawInput);
 
   console.log('   ✅ Proof generated successfully!');
   console.log(`   Public signals: ${publicSignals.join(', ')}`);
@@ -405,7 +410,8 @@ async function main() {
   // Step 5: Withdraw funds
   console.log('\n📝 Step 5: Withdrawing funds...');
 
-  const formattedProof = formatProofForContract(proof);
+  // const formattedProof = formatProofForContract(proof);
+  const formattedProof = proof
 
   // const formattedProof = {
   //   "a": [
@@ -499,3 +505,48 @@ main()
     console.error('\n❌ Error:', error);
     process.exit(1);
   });
+
+
+
+async function generateWithdrawProof(withdrawInput: {
+  root: string;
+  nullifierHash: string;
+  recipient: string;
+  relayer: string;
+  fee: string;
+  refund: string;
+  nullifier: string;
+  secret: string;
+  pathElements: string[];
+  pathIndices: number[];
+}) {
+  try {
+    console.log('Requesting proof generation from server...');
+
+    const response = await fetch(`${PROOF_SERVER_URL}/generate-proof/withdraw`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        input: withdrawInput,
+      }),
+    });
+
+    if (!response.ok) {
+      const error: any = await response.json();
+      throw new Error(`Failed to generate proof: ${error.message}`);
+    }
+
+    const data: any = await response.json();
+    console.log(`Proof generated in ${data.duration}ms`);
+    console.log(`Proof details:`, data);
+    return {
+      proof: data.proof,
+      publicSignals: data.publicSignals,
+    };
+  } catch (error) {
+    console.error('Error generating withdrawal proof:', error);
+    throw error;
+  }
+}
