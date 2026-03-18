@@ -46,7 +46,7 @@ export function Header({
 
           <div className="ui-flex ui-justify-between ui-items-center">
             <span className="ui-text-muted-foreground">Contract:</span>
-            <CopyAddress address={contractAddress} />
+            <CopyAddress xionAddress={contractAddress} />
           </div>
 
           {userAddress && (
@@ -56,7 +56,7 @@ export function Header({
                   <span className="ui-text-muted-foreground">
                     Connected Account:
                   </span>
-                  <CopyAddress address={userAddress} />
+                  <CopyAddress xionAddress={userAddress} />
                 </div>
               </div>
 
