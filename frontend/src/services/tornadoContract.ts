@@ -3,7 +3,7 @@
  * Handles all contract queries and transactions
  */
 
-import type { AAClient } from "@burnt-labs/signers";
+import type { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import type { Coin } from "@cosmjs/stargate";
 import type {
   ContractConfig,
@@ -19,10 +19,10 @@ import { toUint256String } from "../utils/crypto";
  * Tornado Cash Contract Service
  */
 export class TornadoContractService {
-  private client: AAClient;
+  private client: SigningCosmWasmClient | any;
   private contractAddress: string;
 
-  constructor(client: AAClient, contractAddress: string) {
+  constructor(client: SigningCosmWasmClient | any, contractAddress: string) {
     this.client = client;
     this.contractAddress = contractAddress;
   }
@@ -235,7 +235,7 @@ export function extractDepositInfo(events: readonly any[]): {
  * @returns TornadoContractService
  */
 export function createTornadoContract(
-  client: AAClient,
+  client: SigningCosmWasmClient | any,
   contractAddress: string
 ): TornadoContractService {
   return new TornadoContractService(client, contractAddress);

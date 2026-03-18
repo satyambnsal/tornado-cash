@@ -4,7 +4,7 @@
  */
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import type { AAClient } from "@burnt-labs/signers";
+import type { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import type { ContractConfig } from "../types/tornado";
 import { TornadoContractService, createTornadoContract } from "../services/tornadoContract";
 import { ContractError } from "../types/tornado";
@@ -27,7 +27,7 @@ interface TornadoContextType {
   contractService: TornadoContractService | null;
 
   // Methods
-  initializeContract: (client: AAClient) => Promise<void>;
+  initializeContract: (client: SigningCosmWasmClient | any) => Promise<void>;
   refreshConfig: () => Promise<void>;
 }
 
@@ -48,7 +48,7 @@ export function TornadoProvider({ children }: TornadoProviderProps) {
   const [contractService, setContractService] =
     useState<TornadoContractService | null>(null);
 
-  const initializeContract = async (client: AAClient) => {
+  const initializeContract = async (client: SigningCosmWasmClient | any) => {
     try {
       const service = createTornadoContract(client, contractAddress);
       setContractService(service);
