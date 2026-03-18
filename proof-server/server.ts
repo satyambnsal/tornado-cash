@@ -11,7 +11,7 @@ const { buildPoseidon } = require('circomlibjs');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3016;
 
 // Middleware
 app.use(cors());
