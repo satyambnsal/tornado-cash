@@ -23,7 +23,7 @@ function getEnvOrThrow(key: string, description?: string): string {
 // =============================================================================
 // Network Configuration
 // =============================================================================
-
+export const TORNADO_CONTRACT_ADDRESS = "xion1hmzfzh806z0cdl2red0lx2n9sp5pse5y72urta75xdt5rrvmj5lszkc8s6"
 export const NETWORK = import.meta.env.VITE_NETWORK || "testnet";
 
 // this is a bad idea, but keeping for backwards compatibility
@@ -269,7 +269,7 @@ export const OAUTH_CALLBACK_URL =
 export const TORNADO_PROOF_SERVER_URL =
   import.meta.env.VITE_PROOF_SERVER_URL || "http://3.213.0.115:3016";
 
-export const TORNADO_CONTRACT_ADDRESS = "xion1hmzfzh806z0cdl2red0lx2n9sp5pse5y72urta75xdt5rrvmj5lszkc8s6"
+
 
 export const TORNADO_DENOMINATION =
   import.meta.env.VITE_DENOMINATION || "100000"; // 0.1 XION
